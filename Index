@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ระบบขอให้ดำเนินการกิจกรรมนักศึกษา</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body {
+      font-family: "Prompt", sans-serif;
+      background: #f4f8f6;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .box {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 18px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.08);
+    }
+
+    h1 {
+      text-align: center;
+      color: #116b4f;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 12px;
+      background: #116b4f;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .status-box {
+      margin-top: 30px;
+      padding: 15px;
+      background: #eef8f3;
+      border-radius: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
+  <h1>ระบบขอให้ดำเนินการกิจกรรมนักศึกษา</h1>
+
+  <form method="POST" action="https://script.google.com/macros/s/AKfycbyW_Go6C-8U8RGtVAd-6q4DFYiEKVFS6SpKqdHvF4u0_Je2DRBaUNXi32pae9UouSTE/exec">
+
+    <label>ชื่อ-สกุลผู้ขอ</label>
+    <input name="requester" required>
+
+    <label>หน่วยงาน/คณะ/สาขา</label>
+    <input name="department" required>
+
+    <label>อีเมล</label>
+    <input type="email" name="email" required>
+
+    <label>เบอร์โทรศัพท์</label>
+    <input name="phone" required>
+
+    <label>ชื่อกิจกรรม</label>
+    <input name="activityName" required>
+
+    <label>ประเภทระบบ</label>
+    <select name="systemType" id="systemType" onchange="toggleSystem()" required>
+      <option value="">-- เลือกประเภทระบบ --</option>
+      <option value="Check-In">Check-In สำหรับชั้นปีที่ 1 รหัส 169</option>
+      <option value="Passcode">Passcode สำหรับชั้นปีที่ 2-4 รหัส 166-168</option>
+    </select>
+
+    <label>ชั้นปี</label>
+    <select name="studentYear" required>
+      <option value="">-- เลือกชั้นปี --</option>
+      <option>ชั้นปีที่ 1 รหัส 169</option>
+      <option>ชั้นปีที่ 2 รหัส 168</option>
+      <option>ชั้นปีที่ 3 รหัส 167</option>
+      <option>ชั้นปีที่ 4 รหัส 166</option>
+    </select>
+
+    <label>วันที่จัดกิจกรรม</label>
+    <input type="date" name="activityDate" required>
+
+    <label>เวลาเริ่มกิจกรรม</label>
+    <input type="time" name="startTime" required>
+
+    <label>เวลาสิ้นสุดกิจกรรม</label>
+    <input type="time" name="endTime" required>
+
+    <div id="checkinSection" class="hidden">
+      <h3>ข้อมูลระบบ Check-In</h3>
+
+      <label>เวลาที่อนุญาตให้ Check-In เริ่มต้น</label>
+      <input type="time" name="checkinStart">
+
+      <label>เวลาที่อนุญาตให้ Check-In สิ้นสุด</label>
+      <input type="time" name="checkinEnd">
+
+      <label>เวลาที่อนุญาตให้ Check-Out เริ่มต้น</label>
+      <input type="time" name="checkoutStart">
+
+      <label>เวลาที่อนุญาตให้ Check-Out สิ้นสุด</label>
+      <input type="time" name="checkoutEnd">
+
+      <label>Location Check-In</label>
+      <input name="locationIn">
+
+      <label>Location Check-Out</label>
+      <input name="locationOut">
+    </div>
+
+    <label>จำนวนผู้เข้าร่วม</label>
+    <input type="number" name="participants" required>
+
+    <label>กิจกรรมระดับ</label>
+    <select name="activityLevel" required>
+      <option value="">-- เลือกระดับกิจกรรม --</option>
+      <option>มหาวิทยาลัย</option>
+      <option>คณะ - เข้าทั้งคณะ</option>
+      <option>คณะ - เข้าเฉพาะสาขา</option>
+      <option>สาขา</option>
+    </select>
+
+    <label>รายละเอียดระดับกิจกรรม</label>
+    <textarea name="levelDetail" rows="3" required></textarea>
+
+    <label>ลิงก์เอกสาร/กำหนดการ/รายชื่อ</label>
+    <input name="documentLink">
+
+    <button type="submit">ส่งคำขอ</button>
+  </form>
+
+  <div class="status-box">
+    <h3>ตรวจสอบสถานะคำขอ</h3>
+    <input id="searchId" placeholder="กรอกเลขที่คำขอ เช่น ARU-ACT-2569-0001">
+    <button onclick="checkStatus()">ตรวจสอบสถานะ</button>
+    <div id="statusResult"></div>
+  </div>
+</div>
+
+<script>
+function toggleSystem() {
+  const type = document.getElementById('systemType').value;
+  document.getElementById('checkinSection').classList.toggle('hidden', type !== 'Check-In');
+}
+
+function checkStatus() {
+  const id = document.getElementById('searchId').value.trim();
+  if (!id) {
+    alert('กรุณากรอกเลขที่คำขอ');
+    return;
+  }
+
+  const callbackName = 'callback_' + Date.now();
+
+  window[callbackName] = function(data) {
+    const box = document.getElementById('statusResult');
+
+    if (data.error) {
+      box.innerHTML = `<p style="color:red">${data.message}</p>`;
+      return;
+    }
+
+    box.innerHTML = `
+      <hr>
+      <p><b>เลขที่คำขอ:</b> ${data['เลขที่คำขอ']}</p>
+      <p><b>ชื่อกิจกรรม:</b> ${data['ชื่อกิจกรรม']}</p>
+      <p><b>หน่วยงาน:</b> ${data['หน่วยงาน']}</p>
+      <p><b>ประเภทระบบ:</b> ${data['ประเภทระบบ']}</p>
+      <p><b>สถานะ:</b> ${data['สถานะ']}</p>
+      <p><b>หมายเหตุ:</b> ${data['หมายเหตุ'] || '-'}</p>
+      <p><b>รหัสกิจกรรม:</b> ${data['รหัสกิจกรรม'] || '-'}</p>
+      <p><b>ลิงก์ Check-In:</b> ${link(data['ลิงก์ Check-In'])}</p>
+      <p><b>ลิงก์ Check-Out:</b> ${link(data['ลิงก์ Check-Out'])}</p>
+      <p><b>ไฟล์ Passcode:</b> ${link(data['ลิงก์ไฟล์ Passcode'])}</p>
+    `;
+  };
+
+  const script = document.createElement('script');
+  script.src = `https://script.google.com/macros/s/AKfycbyW_Go6C-8U8RGtVAd-6q4DFYiEKVFS6SpKqdHvF4u0_Je2DRBaUNXi32pae9UouSTE/exec?requestId=${encodeURIComponent(id)}&callback=${callbackName}`;
+  document.body.appendChild(script);
+}
+
+function link(url) {
+  if (!url) return '-';
+  return `<a href="${url}" target="_blank">เปิดลิงก์</a>`;
+}
+</script>
+
+</body>
+</html>
