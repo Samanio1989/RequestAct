@@ -206,6 +206,7 @@ textarea{
   background:linear-gradient(135deg,var(--blue),var(--blue2));
   color:white;
   box-shadow:0 8px 18px rgba(37,99,235,.25);
+  margin-top:8px;
 }
 
 .btn.gray{background:#475569}
@@ -238,7 +239,7 @@ a{
 }
 
 .login-wrap{
-  max-width:520px;
+  max-width:560px;
   margin:60px auto;
 }
 
@@ -248,7 +249,7 @@ a{
 }
 
 .login-logo img{
-  width:300px;
+  width:320px;
   max-width:100%;
 }
 
@@ -259,6 +260,12 @@ a{
   padding:14px;
   border-radius:14px;
   margin-bottom:16px;
+}
+
+.small{
+  color:#64748b;
+  font-size:13px;
+  line-height:1.5;
 }
 
 @media(max-width:900px){
@@ -308,7 +315,7 @@ a{
     <b>ต้องการความช่วยเหลือ?</b><br>
     กองพัฒนานักศึกษา<br>
     โทร. 035-276555 ต่อ 1234<br>
-    LINE ID : @aru.activity
+    LINE OA : กองพัฒนานักศึกษา
   </div>
 </aside>
 
@@ -317,7 +324,7 @@ a{
   <div class="topbar">
     <div>
       <h1>ระบบขอให้ดำเนินการกิจกรรมนักศึกษา</h1>
-      <div class="subtitle">ระบบ Check-In / Passcode</div>
+      <div class="subtitle">ระบบ Check-In / Passcode พร้อมแจ้งเตือนผ่าน LINE</div>
     </div>
     <div class="userbox" id="userBox">ผู้ใช้งาน</div>
   </div>
@@ -328,7 +335,9 @@ a{
         <img src="images/aru-logo.jpg">
       </div>
       <h2>🔐 เข้าสู่ระบบ</h2>
+      <label>Username</label>
       <input id="loginUser" placeholder="Username">
+      <label>Password</label>
       <input id="loginPass" type="password" placeholder="Password">
       <button class="btn" onclick="login()">เข้าสู่ระบบ</button>
       <button class="btn gray" onclick="showPage('registerPage')">สมัครผู้ใช้งานทั่วไป</button>
@@ -338,6 +347,11 @@ a{
   <div id="registerPage" class="page">
     <div class="card">
       <h2>📝 สมัครผู้ใช้งานทั่วไป</h2>
+
+      <div class="notice">
+        ช่อง LINE User ID ใช้สำหรับรับแจ้งเตือนสถานะคำขอผ่าน LINE Official Account  
+        ต้องเป็นรหัสรูปแบบขึ้นต้นด้วยตัว U เช่น Uxxxxxxxxxxxxxxxx
+      </div>
 
       <div class="grid">
         <div><label>ชื่อ - สกุล</label><input id="regFullname"></div>
@@ -360,7 +374,11 @@ a{
           </select>
         </div>
         <div><label>เบอร์โทร</label><input id="regPhone"></div>
-        <div><label>LineID</label><input id="regLine"></div>
+        <div class="full">
+          <label>LINE User ID</label>
+          <input id="regLineUserId" placeholder="เช่น Uxxxxxxxxxxxxxxxx">
+          <div class="small">หมายเหตุ: ไม่ใช่ LineID ชื่อผู้ใช้ทั่วไป แต่เป็น LINE User ID จาก LINE Official Account</div>
+        </div>
         <div><label>Username</label><input id="regUser"></div>
         <div><label>Password</label><input id="regPass" type="password"></div>
       </div>
@@ -373,6 +391,11 @@ a{
   <div id="profilePage" class="page">
     <div class="card">
       <h2>👤 ข้อมูลผู้ใช้งาน</h2>
+
+      <div class="notice">
+        ระบบจะส่งแจ้งเตือนไปยัง LINE User ID ที่บันทึกไว้ เมื่อมีการส่งคำขอ รับทราบ ออกรหัสกิจกรรม หรือยกเลิก
+      </div>
+
       <div class="grid">
         <div><label>ชื่อ - สกุล</label><input id="pfFullname"></div>
         <div>
@@ -384,9 +407,13 @@ a{
         </div>
         <div><label>หน่วยงาน</label><input id="pfOrg"></div>
         <div><label>เบอร์โทร</label><input id="pfPhone"></div>
-        <div><label>LineID</label><input id="pfLine"></div>
+        <div class="full">
+          <label>LINE User ID</label>
+          <input id="pfLineUserId" placeholder="เช่น Uxxxxxxxxxxxxxxxx">
+        </div>
       </div>
       <button class="btn" onclick="updateProfile()">บันทึกข้อมูล</button>
+      <button class="btn green" onclick="testLine()">ทดสอบส่ง LINE</button>
     </div>
   </div>
 
@@ -532,7 +559,7 @@ function register(){
     orgType:regOrgType.value,
     organization:regFaculty.value,
     phone:regPhone.value,
-    lineId:regLine.value,
+    lineUserId:regLineUserId.value,
     username:regUser.value,
     password:regPass.value
   }).then(res=>{
@@ -547,11 +574,11 @@ function logout(){
 }
 
 function fillProfile(){
-  pfFullname.value=currentUser.fullname;
-  pfOrgType.value=currentUser.orgType;
-  pfOrg.value=currentUser.organization;
-  pfPhone.value=currentUser.phone;
-  pfLine.value=currentUser.lineId;
+  pfFullname.value=currentUser.fullname || '';
+  pfOrgType.value=currentUser.orgType || 'คณะ';
+  pfOrg.value=currentUser.organization || '';
+  pfPhone.value=currentUser.phone || '';
+  pfLineUserId.value=currentUser.lineUserId || '';
 }
 
 function updateProfile(){
@@ -562,7 +589,7 @@ function updateProfile(){
     orgType:pfOrgType.value,
     organization:pfOrg.value,
     phone:pfPhone.value,
-    lineId:pfLine.value
+    lineUserId:pfLineUserId.value
   }).then(res=>{
     alert(res.message);
     if(res.ok){
@@ -570,10 +597,24 @@ function updateProfile(){
       currentUser.orgType=pfOrgType.value;
       currentUser.organization=pfOrg.value;
       currentUser.phone=pfPhone.value;
-      currentUser.lineId=pfLine.value;
+      currentUser.lineUserId=pfLineUserId.value;
       localStorage.setItem('aruUser',JSON.stringify(currentUser));
       location.reload();
     }
+  });
+}
+
+function testLine(){
+  if(!pfLineUserId.value){
+    alert('กรุณากรอก LINE User ID ก่อน');
+    return;
+  }
+
+  api({
+    action:'testLine',
+    lineUserId:pfLineUserId.value
+  }).then(res=>{
+    alert(res.message);
   });
 }
 
@@ -649,6 +690,7 @@ function renderRequests(rows,isAdmin){
   return rows.map(r=>`
     <div class="request-card">
       <h3>📌 ${r['ชื่อกิจกรรม']}</h3>
+      <p><b>เลขที่คำขอ:</b> ${r.RequestID}</p>
       <p><b>วันที่จัดกิจกรรม:</b> ${r['วันที่จัดกิจกรรม']}</p>
       <p><b>ประเภทระบบ:</b> ${r['ประเภทระบบ']}</p>
       <p><b>สถานะ:</b> <span class="badge">${r['สถานะ']}</span></p>
@@ -694,7 +736,7 @@ function adminForm(r){
     <input id="pcl_${r.RequestID}" placeholder="ลิงก์ Passcode" value="${r['ลิงก์ Passcode'] || ''}">
     <label>Passcode เริ่ม</label><input id="pcs_${r.RequestID}" type="datetime-local">
     <label>Passcode สิ้นสุด</label><input id="pce_${r.RequestID}" type="datetime-local">
-    <button class="btn green" onclick="updateStatus('${r.RequestID}')">บันทึกสถานะ</button>
+    <button class="btn green" onclick="updateStatus('${r.RequestID}')">บันทึกสถานะและแจ้ง LINE</button>
   `;
 }
 
