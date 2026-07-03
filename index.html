@@ -6,155 +6,476 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-body{font-family:Prompt,Sarabun,sans-serif;background:#eef7f3;margin:0;padding:20px;color:#123}
-.container{max-width:1100px;margin:auto;background:#fff;border-radius:20px;padding:25px;box-shadow:0 8px 24px #0001}
-h1{text-align:center;color:#0b684d}
-h2{color:#0b684d}
-input,select,textarea{width:100%;padding:10px;margin:6px 0 14px;border:1px solid #ccc;border-radius:10px}
-textarea{min-height:90px}
-button{background:#0b684d;color:white;border:0;border-radius:12px;padding:12px 20px;cursor:pointer;font-weight:bold}
-button.gray{background:#64748b}
-button.red{background:#b91c1c}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
-.card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:18px;padding:18px;margin:18px 0}
-.hidden{display:none}
-.nav{display:flex;gap:10px;justify-content:center;margin-bottom:20px;flex-wrap:wrap}
-.badge{padding:6px 12px;border-radius:20px;background:#dbeafe}
-table{width:100%;border-collapse:collapse;margin-top:15px}
-th,td{border:1px solid #ddd;padding:8px;vertical-align:top}
-th{background:#dcfce7}
-@media(max-width:700px){.grid{grid-template-columns:1fr}}
+:root{
+  --blue:#2563eb;
+  --blue2:#1d4ed8;
+  --sky:#eaf4ff;
+  --white:#ffffff;
+  --gray:#64748b;
+  --dark:#0f172a;
+  --black:#111827;
+  --border:#dbeafe;
+  --red:#dc2626;
+  --green:#0f766e;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:"Prompt","Sarabun",Arial,sans-serif;
+  background:linear-gradient(135deg,#f8fbff,#eaf4ff);
+  color:var(--dark);
+}
+
+.app{
+  display:flex;
+  min-height:100vh;
+}
+
+.sidebar{
+  width:290px;
+  background:rgba(255,255,255,.92);
+  border-right:1px solid #e2e8f0;
+  padding:22px;
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  box-shadow:8px 0 30px rgba(15,23,42,.06);
+}
+
+.logo{
+  width:100%;
+  margin-bottom:28px;
+}
+
+.menu button{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  border:1px solid #e5e7eb;
+  background:#fff;
+  color:#1f2937;
+  padding:14px 16px;
+  margin-bottom:12px;
+  border-radius:14px;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+  text-align:left;
+}
+
+.menu button.active,
+.menu button:hover{
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  color:white;
+  border-color:transparent;
+  box-shadow:0 8px 20px rgba(37,99,235,.25);
+}
+
+.menu .danger{
+  color:var(--red);
+}
+
+.help{
+  margin-top:30px;
+  padding:18px;
+  border-radius:18px;
+  background:linear-gradient(135deg,#eff6ff,#ffffff);
+  border:1px solid var(--border);
+  color:#1e3a8a;
+  font-size:14px;
+}
+
+.main{
+  margin-left:290px;
+  width:calc(100% - 290px);
+  padding:28px;
+}
+
+.topbar{
+  background:rgba(255,255,255,.9);
+  border:1px solid #e2e8f0;
+  border-radius:22px;
+  padding:22px 26px;
+  margin-bottom:22px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:0 10px 30px rgba(15,23,42,.06);
+}
+
+h1{
+  margin:0;
+  color:#0f172a;
+  font-size:26px;
+}
+
+.subtitle{
+  color:var(--gray);
+  margin-top:5px;
+}
+
+.userbox{
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  padding:12px 18px;
+  border-radius:16px;
+  font-weight:700;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+.card{
+  background:rgba(255,255,255,.96);
+  border:1px solid #dbeafe;
+  border-radius:22px;
+  padding:24px;
+  margin-bottom:22px;
+  box-shadow:0 10px 28px rgba(15,23,42,.06);
+}
+
+.card h2{
+  margin-top:0;
+  color:var(--blue2);
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+
+.full{
+  grid-column:1/-1;
+}
+
+label{
+  font-weight:700;
+  margin-bottom:6px;
+  display:block;
+  color:#334155;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:12px 14px;
+  border:1px solid #cbd5e1;
+  border-radius:12px;
+  font-size:15px;
+  background:#fff;
+}
+
+textarea{
+  min-height:92px;
+}
+
+.check-card{
+  border:1px solid #bfdbfe;
+  background:#f8fbff;
+  border-radius:16px;
+  padding:16px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-weight:700;
+}
+
+.check-card input{
+  width:auto;
+  transform:scale(1.2);
+}
+
+.btn{
+  border:0;
+  border-radius:14px;
+  padding:13px 22px;
+  font-weight:800;
+  cursor:pointer;
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  color:white;
+  box-shadow:0 8px 18px rgba(37,99,235,.25);
+}
+
+.btn.gray{background:#475569}
+.btn.red{background:#b91c1c}
+.btn.green{background:var(--green)}
+
+.hidden{display:none!important}
+
+.badge{
+  display:inline-block;
+  padding:7px 14px;
+  border-radius:999px;
+  background:#dbeafe;
+  color:#1e40af;
+  font-weight:800;
+}
+
+.request-card{
+  border:1px solid #dbeafe;
+  border-left:6px solid var(--blue);
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:16px;
+  background:#fff;
+}
+
+a{
+  color:var(--blue2);
+  font-weight:800;
+}
+
+.login-wrap{
+  max-width:520px;
+  margin:60px auto;
+}
+
+.login-logo{
+  text-align:center;
+  margin-bottom:24px;
+}
+
+.login-logo img{
+  width:300px;
+  max-width:100%;
+}
+
+.notice{
+  background:#eff6ff;
+  border:1px solid #bfdbfe;
+  color:#1e3a8a;
+  padding:14px;
+  border-radius:14px;
+  margin-bottom:16px;
+}
+
+@media(max-width:900px){
+  .sidebar{
+    position:relative;
+    width:100%;
+    height:auto;
+  }
+
+  .app{
+    display:block;
+  }
+
+  .main{
+    margin-left:0;
+    width:100%;
+    padding:14px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .topbar{
+    display:block;
+  }
+}
 </style>
 </head>
 
 <body>
-<div class="container">
-<h1>ระบบขอให้ดำเนินการกิจกรรมนักศึกษา</h1>
-<p style="text-align:center">ระบบ Check-In / Passcode</p>
 
-<div id="menu" class="nav hidden">
-<button onclick="showPage('requestPage')">ส่งคำขอ</button>
-<button onclick="loadMyRequests()">ติดตามสถานะ</button>
-<button onclick="showPage('profilePage')">ข้อมูลผู้ใช้งาน</button>
-<button id="adminBtn" class="gray hidden" onclick="loadAdmin()">Admin</button>
-<button class="red" onclick="logout()">ออกจากระบบ</button>
-</div>
+<div class="app">
 
-<div id="loginPage">
-<div class="card">
-<h2>เข้าสู่ระบบ</h2>
-<input id="loginUser" placeholder="Username">
-<input id="loginPass" type="password" placeholder="Password">
-<button onclick="login()">เข้าสู่ระบบ</button>
-<button class="gray" onclick="showPage('registerPage')">สมัครผู้ใช้งานทั่วไป</button>
-</div>
-</div>
+<aside class="sidebar" id="sidebar">
+  <img src="images/aru-logo.jpg" class="logo" alt="ARU Logo">
 
-<div id="registerPage" class="hidden">
-<div class="card">
-<h2>สมัครผู้ใช้งานทั่วไป</h2>
-<input id="regFullname" placeholder="ชื่อ - สกุล">
-<select id="regOrgType">
-<option value="คณะ">คณะ</option>
-<option value="หน่วยงานภายในมหาวิทยาลัย">หน่วยงานภายในมหาวิทยาลัย</option>
-</select>
-<select id="regFaculty">
-<option>ครุศาสตร์</option>
-<option>มนุษยศาสตร์และสังคมศาสตร์</option>
-<option>วิทยาศาสตร์และเทคโนโลยี</option>
-<option>วิทยาการจัดการ</option>
-<option>หน่วยงานภายในมหาวิทยาลัย</option>
-</select>
-<input id="regPhone" placeholder="เบอร์โทร">
-<input id="regLine" placeholder="LineID">
-<input id="regUser" placeholder="Username">
-<input id="regPass" type="password" placeholder="Password">
-<button onclick="register()">สมัครใช้งาน</button>
-<button class="gray" onclick="showPage('loginPage')">กลับเข้าสู่ระบบ</button>
-</div>
-</div>
+  <div class="menu">
+    <button id="btnRequest" onclick="showPage('requestPage',this)">📨 ส่งคำขอกิจกรรม</button>
+    <button id="btnStatus" onclick="loadMyRequests()">🕒 ติดตามสถานะ</button>
+    <button id="btnProfile" onclick="showPage('profilePage',this)">👤 ข้อมูลผู้ใช้งาน</button>
+    <button id="btnAdmin" class="hidden" onclick="loadAdmin()">🛡️ Admin</button>
+    <button class="danger" onclick="logout()">🚪 ออกจากระบบ</button>
+  </div>
 
-<div id="profilePage" class="hidden">
-<div class="card">
-<h2>ข้อมูลผู้ใช้งาน</h2>
-<input id="pfFullname" placeholder="ชื่อ - สกุล">
-<select id="pfOrgType">
-<option value="คณะ">คณะ</option>
-<option value="หน่วยงานภายในมหาวิทยาลัย">หน่วยงานภายในมหาวิทยาลัย</option>
-</select>
-<input id="pfOrg" placeholder="หน่วยงาน">
-<input id="pfPhone" placeholder="เบอร์โทร">
-<input id="pfLine" placeholder="LineID">
-<button onclick="updateProfile()">บันทึกข้อมูล</button>
-</div>
-</div>
+  <div class="help">
+    <b>ต้องการความช่วยเหลือ?</b><br>
+    กองพัฒนานักศึกษา<br>
+    โทร. 035-276555 ต่อ 1234<br>
+    LINE ID : @aru.activity
+  </div>
+</aside>
 
-<div id="requestPage" class="hidden">
-<div class="card">
-<h2>ส่งคำขอกิจกรรม</h2>
+<main class="main">
 
-<input id="activityName" placeholder="ชื่อกิจกรรม">
+  <div class="topbar">
+    <div>
+      <h1>ระบบขอให้ดำเนินการกิจกรรมนักศึกษา</h1>
+      <div class="subtitle">ระบบ Check-In / Passcode</div>
+    </div>
+    <div class="userbox" id="userBox">ผู้ใช้งาน</div>
+  </div>
 
-<label><input type="checkbox" id="typeCheckIn" onchange="toggleTypes()"> Check-In เฉพาะปี 1 รหัส 169</label>
-<label><input type="checkbox" id="typePasscode" onchange="toggleTypes()"> Passcode เฉพาะปี 2-4 รหัส 166-168</label>
+  <div id="loginPage" class="page active">
+    <div class="login-wrap card">
+      <div class="login-logo">
+        <img src="images/aru-logo.jpg">
+      </div>
+      <h2>🔐 เข้าสู่ระบบ</h2>
+      <input id="loginUser" placeholder="Username">
+      <input id="loginPass" type="password" placeholder="Password">
+      <button class="btn" onclick="login()">เข้าสู่ระบบ</button>
+      <button class="btn gray" onclick="showPage('registerPage')">สมัครผู้ใช้งานทั่วไป</button>
+    </div>
+  </div>
 
-<div class="grid">
-<div><label>วันที่จัดกิจกรรม</label><input id="activityDate" type="date"></div>
-<div><label>จำนวนผู้เข้าร่วม</label><input id="participants" type="number"></div>
-<div><label>เวลาเริ่มกิจกรรม</label><input id="startTime" type="time"></div>
-<div><label>เวลาสิ้นสุดกิจกรรม</label><input id="endTime" type="time"></div>
-</div>
+  <div id="registerPage" class="page">
+    <div class="card">
+      <h2>📝 สมัครผู้ใช้งานทั่วไป</h2>
 
-<input id="place" placeholder="สถานที่จัดกิจกรรม">
+      <div class="grid">
+        <div><label>ชื่อ - สกุล</label><input id="regFullname"></div>
+        <div>
+          <label>ประเภทหน่วยงาน</label>
+          <select id="regOrgType">
+            <option value="คณะ">คณะ</option>
+            <option value="หน่วยงานภายในมหาวิทยาลัย">หน่วยงานภายในมหาวิทยาลัย</option>
+          </select>
+        </div>
+        <div>
+          <label>หน่วยงาน</label>
+          <select id="regFaculty">
+            <option>ครุศาสตร์</option>
+            <option>มนุษยศาสตร์และสังคมศาสตร์</option>
+            <option>วิทยาศาสตร์และเทคโนโลยี</option>
+            <option>วิทยาการจัดการ</option>
+            <option>กองพัฒนานักศึกษา</option>
+            <option>สำนัก/สถาบัน/หน่วยงานอื่น</option>
+          </select>
+        </div>
+        <div><label>เบอร์โทร</label><input id="regPhone"></div>
+        <div><label>LineID</label><input id="regLine"></div>
+        <div><label>Username</label><input id="regUser"></div>
+        <div><label>Password</label><input id="regPass" type="password"></div>
+      </div>
 
-<div id="checkInBox" class="card hidden">
-<h2>ข้อมูลระบบ Check-In</h2>
-<div class="grid">
-<div><label>Check-In เริ่มต้น</label><input id="checkInStart" type="time"></div>
-<div><label>Check-In สิ้นสุด</label><input id="checkInEnd" type="time"></div>
-<div><label>Check-Out เริ่มต้น</label><input id="checkOutStart" type="time"></div>
-<div><label>Check-Out สิ้นสุด</label><input id="checkOutEnd" type="time"></div>
-</div>
-<input id="locationCheckIn" placeholder="Location Check-In">
-<input id="locationCheckOut" placeholder="Location Check-Out">
-<textarea id="checkInDetail" placeholder="รายละเอียดกิจกรรมที่ต้องการแจ้ง"></textarea>
-<input id="banner" placeholder="ลิงก์ภาพแบนเนอร์กิจกรรม หากไม่กรอกใช้ตรามหาวิทยาลัยแทน">
-<select id="checkInLevel"></select>
-</div>
+      <button class="btn" onclick="register()">สมัครใช้งาน</button>
+      <button class="btn gray" onclick="showPage('loginPage')">กลับเข้าสู่ระบบ</button>
+    </div>
+  </div>
 
-<div id="passcodeBox" class="card hidden">
-<h2>ข้อมูลระบบ Passcode</h2>
-<label><input type="checkbox" class="pcYear" value="ชั้นปีที่ 2 รหัส 168"> ชั้นปีที่ 2 รหัส 168</label>
-<label><input type="checkbox" class="pcYear" value="ชั้นปีที่ 3 รหัส 167"> ชั้นปีที่ 3 รหัส 167</label>
-<label><input type="checkbox" class="pcYear" value="ชั้นปีที่ 4 รหัส 166"> ชั้นปีที่ 4 รหัส 166</label>
-<select id="passcodeLevel"></select>
-</div>
+  <div id="profilePage" class="page">
+    <div class="card">
+      <h2>👤 ข้อมูลผู้ใช้งาน</h2>
+      <div class="grid">
+        <div><label>ชื่อ - สกุล</label><input id="pfFullname"></div>
+        <div>
+          <label>ประเภทหน่วยงาน</label>
+          <select id="pfOrgType">
+            <option value="คณะ">คณะ</option>
+            <option value="หน่วยงานภายในมหาวิทยาลัย">หน่วยงานภายในมหาวิทยาลัย</option>
+          </select>
+        </div>
+        <div><label>หน่วยงาน</label><input id="pfOrg"></div>
+        <div><label>เบอร์โทร</label><input id="pfPhone"></div>
+        <div><label>LineID</label><input id="pfLine"></div>
+      </div>
+      <button class="btn" onclick="updateProfile()">บันทึกข้อมูล</button>
+    </div>
+  </div>
 
-<div class="card">
-<h2>เอกสารประกอบการขอ</h2>
-<input id="documentLink" placeholder="Link Google Drive">
-<label><input type="checkbox" id="hasSchedule"> กำหนดการกิจกรรม</label>
-<label><input type="checkbox" id="hasStudentList"> รายชื่อนักศึกษาผู้เข้าร่วมกิจกรรม</label>
-</div>
+  <div id="requestPage" class="page">
+    <div class="card">
+      <h2>📨 ส่งคำขอกิจกรรม</h2>
 
-<button onclick="createRequest()">ส่งคำขอ</button>
-</div>
-</div>
+      <div class="grid">
+        <div class="full">
+          <label>ชื่อกิจกรรม</label>
+          <input id="activityName" placeholder="กรอกชื่อกิจกรรม">
+        </div>
 
-<div id="myStatusPage" class="hidden">
-<div class="card">
-<h2>ติดตามสถานะคำขอกิจกรรม</h2>
-<div id="myRequests"></div>
-</div>
-</div>
+        <div class="check-card">
+          <input type="checkbox" id="typeCheckIn" onchange="toggleTypes()">
+          ✅ Check-In เฉพาะปี 1 รหัส 169
+        </div>
 
-<div id="adminPage" class="hidden">
-<div class="card">
-<h2>Admin : รายการคำขอทั้งหมด</h2>
-<div id="adminRequests"></div>
-</div>
-</div>
+        <div class="check-card">
+          <input type="checkbox" id="typePasscode" onchange="toggleTypes()">
+          🔑 Passcode เฉพาะปี 2-4 รหัส 166-168
+        </div>
 
+        <div><label>วันที่จัดกิจกรรม</label><input id="activityDate" type="date"></div>
+        <div><label>จำนวนผู้เข้าร่วม</label><input id="participants" type="number"></div>
+        <div><label>เวลาเริ่มกิจกรรม</label><input id="startTime" type="time"></div>
+        <div><label>เวลาสิ้นสุดกิจกรรม</label><input id="endTime" type="time"></div>
+        <div class="full"><label>สถานที่จัดกิจกรรม</label><input id="place"></div>
+      </div>
+    </div>
+
+    <div id="checkInBox" class="card hidden">
+      <h2>✅ ข้อมูลระบบ Check-In</h2>
+      <div class="notice">กิจกรรมสำหรับชั้นปีที่ 1 รหัส 169 ไม่ควรขอดำเนินการย้อนหลัง</div>
+
+      <div class="grid">
+        <div><label>Check-In เริ่มต้น</label><input id="checkInStart" type="time"></div>
+        <div><label>Check-In สิ้นสุด</label><input id="checkInEnd" type="time"></div>
+        <div><label>Check-Out เริ่มต้น</label><input id="checkOutStart" type="time"></div>
+        <div><label>Check-Out สิ้นสุด</label><input id="checkOutEnd" type="time"></div>
+        <div><label>Location Check-In</label><input id="locationCheckIn"></div>
+        <div><label>Location Check-Out</label><input id="locationCheckOut"></div>
+        <div class="full"><label>รายละเอียดกิจกรรมที่ต้องการแจ้ง</label><textarea id="checkInDetail"></textarea></div>
+        <div class="full"><label>ลิงก์ภาพแบนเนอร์กิจกรรม</label><input id="banner" placeholder="ถ้าไม่กรอกจะใช้ตรามหาวิทยาลัยแทน"></div>
+        <div class="full"><label>กิจกรรมระดับ</label><select id="checkInLevel"></select></div>
+      </div>
+    </div>
+
+    <div id="passcodeBox" class="card hidden">
+      <h2>🔑 ข้อมูลระบบ Passcode</h2>
+
+      <div class="grid">
+        <div class="full">
+          <label>ชั้นปีที่สามารถเข้าร่วม</label>
+          <div class="check-card"><input type="checkbox" class="pcYear" value="ชั้นปีที่ 2 รหัส 168"> ชั้นปีที่ 2 รหัส 168</div>
+          <div class="check-card"><input type="checkbox" class="pcYear" value="ชั้นปีที่ 3 รหัส 167"> ชั้นปีที่ 3 รหัส 167</div>
+          <div class="check-card"><input type="checkbox" class="pcYear" value="ชั้นปีที่ 4 รหัส 166"> ชั้นปีที่ 4 รหัส 166</div>
+        </div>
+        <div class="full"><label>กิจกรรมระดับ</label><select id="passcodeLevel"></select></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📎 เอกสารประกอบการขอ</h2>
+      <div class="grid">
+        <div class="full"><label>Link Google Drive</label><input id="documentLink"></div>
+        <div class="check-card"><input type="checkbox" id="hasSchedule"> 📅 กำหนดการกิจกรรม</div>
+        <div class="check-card"><input type="checkbox" id="hasStudentList"> 📄 รายชื่อนักศึกษาผู้เข้าร่วมกิจกรรม</div>
+      </div>
+      <br>
+      <button class="btn" onclick="createRequest()">🚀 ส่งคำขอ</button>
+    </div>
+  </div>
+
+  <div id="myStatusPage" class="page">
+    <div class="card">
+      <h2>🕒 ติดตามสถานะคำขอกิจกรรม</h2>
+      <div id="myRequests"></div>
+    </div>
+  </div>
+
+  <div id="adminPage" class="page">
+    <div class="card">
+      <h2>🛡️ Admin : รายการคำขอทั้งหมด</h2>
+      <div id="adminRequests"></div>
+    </div>
+  </div>
+
+</main>
 </div>
 
 <script>
@@ -168,19 +489,25 @@ function api(data){
   }).then(r=>r.json());
 }
 
-function showPage(id){
-  document.querySelectorAll('.container > div:not(#menu)').forEach(x=>x.classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+
+  document.querySelectorAll('.menu button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
 }
 
 function init(){
   if(currentUser){
-    document.getElementById('menu').classList.remove('hidden');
-    if(currentUser.role==='ADMIN') document.getElementById('adminBtn').classList.remove('hidden');
+    userBox.innerHTML = `👤 ${currentUser.fullname}<br><small>${currentUser.role}</small>`;
+    if(currentUser.role === 'ADMIN') btnAdmin.classList.remove('hidden');
     fillProfile();
     setupLevelOptions();
-    showPage('requestPage');
+    showPage('requestPage',btnRequest);
   }else{
+    sidebar.classList.add('hidden');
+    document.querySelector('.main').style.marginLeft = '0';
+    document.querySelector('.main').style.width = '100%';
     showPage('loginPage');
   }
 }
@@ -194,7 +521,7 @@ function login(){
     if(!res.ok) return alert(res.message);
     currentUser=res.user;
     localStorage.setItem('aruUser',JSON.stringify(currentUser));
-    init();
+    location.reload();
   });
 }
 
@@ -245,20 +572,21 @@ function updateProfile(){
       currentUser.phone=pfPhone.value;
       currentUser.lineId=pfLine.value;
       localStorage.setItem('aruUser',JSON.stringify(currentUser));
+      location.reload();
     }
   });
 }
 
 function setupLevelOptions(){
-  const base = ['คณะ - เข้าทั้งคณะ','คณะ - เข้าเฉพาะสาขา'];
-  if(currentUser.orgType === 'หน่วยงานภายในมหาวิทยาลัย') base.unshift('มหาวิทยาลัย');
-  checkInLevel.innerHTML = base.map(x=>`<option>${x}</option>`).join('');
-  passcodeLevel.innerHTML = base.map(x=>`<option>${x}</option>`).join('');
+  const base=['คณะ - เข้าทั้งคณะ','คณะ - เข้าเฉพาะสาขา'];
+  if(currentUser.orgType==='หน่วยงานภายในมหาวิทยาลัย') base.unshift('มหาวิทยาลัย');
+  checkInLevel.innerHTML=base.map(x=>`<option>${x}</option>`).join('');
+  passcodeLevel.innerHTML=base.map(x=>`<option>${x}</option>`).join('');
 }
 
 function toggleTypes(){
-  checkInBox.classList.toggle('hidden', !typeCheckIn.checked);
-  passcodeBox.classList.toggle('hidden', !typePasscode.checked);
+  checkInBox.classList.toggle('hidden',!typeCheckIn.checked);
+  passcodeBox.classList.toggle('hidden',!typePasscode.checked);
 }
 
 function createRequest(){
@@ -279,7 +607,6 @@ function createRequest(){
     startTime:startTime.value,
     endTime:endTime.value,
     place:place.value,
-
     checkInStart:checkInStart.value,
     checkInEnd:checkInEnd.value,
     checkOutStart:checkOutStart.value,
@@ -289,10 +616,8 @@ function createRequest(){
     checkInDetail:checkInDetail.value,
     banner:banner.value || 'ตรามหาวิทยาลัย',
     checkInLevel:checkInLevel.value,
-
     passcodeYears:pcYears,
     passcodeLevel:passcodeLevel.value,
-
     documentLink:documentLink.value,
     hasSchedule:hasSchedule.checked,
     hasStudentList:hasStudentList.checked
@@ -303,22 +628,18 @@ function createRequest(){
 }
 
 function loadMyRequests(){
-  showPage('myStatusPage');
+  showPage('myStatusPage',btnStatus);
   api({action:'myRequests',userId:currentUser.userId}).then(res=>{
     if(!res.ok) return alert(res.message);
-    myRequests.innerHTML = renderRequests(res.data,false);
+    myRequests.innerHTML=renderRequests(res.data,false);
   });
 }
 
 function loadAdmin(){
-  showPage('adminPage');
-  api({
-    action:'allRequests',
-    username:'sam',
-    password:'1900'
-  }).then(res=>{
+  showPage('adminPage',btnAdmin);
+  api({action:'allRequests',username:'sam',password:'1900'}).then(res=>{
     if(!res.ok) return alert(res.message);
-    adminRequests.innerHTML = renderRequests(res.data,true);
+    adminRequests.innerHTML=renderRequests(res.data,true);
   });
 }
 
@@ -326,53 +647,54 @@ function renderRequests(rows,isAdmin){
   if(!rows.length) return '<p>ยังไม่มีข้อมูล</p>';
 
   return rows.map(r=>`
-  <div class="card">
-    <h3>${r['ชื่อกิจกรรม']}</h3>
-    <p><b>วันที่จัดกิจกรรม:</b> ${r['วันที่จัดกิจกรรม']}</p>
-    <p><b>ประเภทระบบ:</b> ${r['ประเภทระบบ']}</p>
-    <p><b>สถานะ:</b> <span class="badge">${r['สถานะ']}</span></p>
-    <p><b>หมายเหตุ:</b> ${r['หมายเหตุแอดมิน'] || '-'}</p>
+    <div class="request-card">
+      <h3>📌 ${r['ชื่อกิจกรรม']}</h3>
+      <p><b>วันที่จัดกิจกรรม:</b> ${r['วันที่จัดกิจกรรม']}</p>
+      <p><b>ประเภทระบบ:</b> ${r['ประเภทระบบ']}</p>
+      <p><b>สถานะ:</b> <span class="badge">${r['สถานะ']}</span></p>
+      <p><b>หมายเหตุ:</b> ${r['หมายเหตุแอดมิน'] || '-'}</p>
 
-    ${r['สถานะ']==='🟢 ออกรหัสกิจกรรมแล้ว' ? `
-      <hr>
-      <h4>รายการเอกสาร / ลิงก์ใช้งาน</h4>
-      ${r['ประเภทระบบ'].includes('Check-In') ? `
-        <p><b>ระบบกิจกรรม Check-In:</b> <a href="${r['ลิงก์ระบบ Check-In'] || 'https://activity.aru.ac.th/'}" target="_blank">เข้าใช้งานระบบ</a></p>
-        <p>Check-In: ${r['CheckInStart']} - ${r['CheckInEnd']}</p>
-        <p>Check-Out: ${r['CheckOutStart']} - ${r['CheckOutEnd']}</p>
-        <p>เข้าใช้งานระบบได้ที่ <a href="https://activity.aru.ac.th/" target="_blank">https://activity.aru.ac.th/</a></p>
+      ${r['สถานะ']==='🟢 ออกรหัสกิจกรรมแล้ว' ? `
+        <hr>
+        <h4>📂 รายการเอกสาร / ลิงก์ใช้งาน</h4>
+
+        ${r['ประเภทระบบ'].includes('Check-In') ? `
+          <p><b>ระบบกิจกรรม Check-In:</b> <a href="${r['ลิงก์ระบบ Check-In'] || 'https://activity.aru.ac.th/'}" target="_blank">เข้าใช้งานระบบ</a></p>
+          <p>Check-In: ${r['CheckInStart']} - ${r['CheckInEnd']}</p>
+          <p>Check-Out: ${r['CheckOutStart']} - ${r['CheckOutEnd']}</p>
+          <p>เข้าใช้งานระบบได้ที่ <a href="https://activity.aru.ac.th/" target="_blank">https://activity.aru.ac.th/</a></p>
+        `:''}
+
+        ${r['ประเภทระบบ'].includes('Passcode') ? `
+          <p><b>รายชื่อผู้เข้าร่วมกิจกรรม:</b> ${link(r['ลิงก์รายชื่อ Passcode'])}</p>
+          <p><b>Passcode:</b> ${link(r['ลิงก์ Passcode'])}</p>
+          <p>Passcode มีอายุ 6 วัน โดยกรอกได้ตั้งแต่ ${r['Passcode เริ่ม'] || '-'} จนถึง ${r['Passcode สิ้นสุด'] || '-'}</p>
+          <p>เข้าใช้งานระบบได้ที่ <a href="http://sars.aru.ac.th/" target="_blank">http://sars.aru.ac.th/</a></p>
+        `:''}
       `:''}
 
-      ${r['ประเภทระบบ'].includes('Passcode') ? `
-        <p><b>รายชื่อผู้เข้าร่วมกิจกรรม:</b> ${link(r['ลิงก์รายชื่อ Passcode'])}</p>
-        <p><b>Passcode:</b> ${link(r['ลิงก์ Passcode'])}</p>
-        <p>Passcode มีอายุ 6 วัน โดยกรอกได้ตั้งแต่ ${r['Passcode เริ่ม'] || '-'} จนถึง ${r['Passcode สิ้นสุด'] || '-'}</p>
-        <p>เข้าใช้งานระบบได้ที่ <a href="http://sars.aru.ac.th/" target="_blank">http://sars.aru.ac.th/</a></p>
-      `:''}
-    `:''}
-
-    ${isAdmin ? adminForm(r) : ''}
-  </div>
+      ${isAdmin ? adminForm(r) : ''}
+    </div>
   `).join('');
 }
 
 function adminForm(r){
   return `
-  <hr>
-  <h4>อัปเดตสถานะ</h4>
-  <select id="st_${r.RequestID}">
-    <option ${r['สถานะ']==='🔵 ส่งคำขอ'?'selected':''}>🔵 ส่งคำขอ</option>
-    <option ${r['สถานะ']==='🟡 รับทราบ'?'selected':''}>🟡 รับทราบ</option>
-    <option ${r['สถานะ']==='🟢 ออกรหัสกิจกรรมแล้ว'?'selected':''}>🟢 ออกรหัสกิจกรรมแล้ว</option>
-    <option ${r['สถานะ']==='🔴 ยกเลิก'?'selected':''}>🔴 ยกเลิก</option>
-  </select>
-  <textarea id="note_${r.RequestID}" placeholder="หมายเหตุ">${r['หมายเหตุแอดมิน'] || ''}</textarea>
-  <input id="cil_${r.RequestID}" placeholder="ลิงก์ระบบ Check-In" value="${r['ลิงก์ระบบ Check-In'] || ''}">
-  <input id="psl_${r.RequestID}" placeholder="ลิงก์รายชื่อ Passcode" value="${r['ลิงก์รายชื่อ Passcode'] || ''}">
-  <input id="pcl_${r.RequestID}" placeholder="ลิงก์ Passcode" value="${r['ลิงก์ Passcode'] || ''}">
-  <label>Passcode เริ่ม</label><input id="pcs_${r.RequestID}" type="datetime-local">
-  <label>Passcode สิ้นสุด</label><input id="pce_${r.RequestID}" type="datetime-local">
-  <button onclick="updateStatus('${r.RequestID}')">บันทึกสถานะ</button>
+    <hr>
+    <h4>🛠️ อัปเดตสถานะ</h4>
+    <select id="st_${r.RequestID}">
+      <option ${r['สถานะ']==='🔵 ส่งคำขอ'?'selected':''}>🔵 ส่งคำขอ</option>
+      <option ${r['สถานะ']==='🟡 รับทราบ'?'selected':''}>🟡 รับทราบ</option>
+      <option ${r['สถานะ']==='🟢 ออกรหัสกิจกรรมแล้ว'?'selected':''}>🟢 ออกรหัสกิจกรรมแล้ว</option>
+      <option ${r['สถานะ']==='🔴 ยกเลิก'?'selected':''}>🔴 ยกเลิก</option>
+    </select>
+    <textarea id="note_${r.RequestID}" placeholder="หมายเหตุ">${r['หมายเหตุแอดมิน'] || ''}</textarea>
+    <input id="cil_${r.RequestID}" placeholder="ลิงก์ระบบ Check-In" value="${r['ลิงก์ระบบ Check-In'] || ''}">
+    <input id="psl_${r.RequestID}" placeholder="ลิงก์รายชื่อ Passcode" value="${r['ลิงก์รายชื่อ Passcode'] || ''}">
+    <input id="pcl_${r.RequestID}" placeholder="ลิงก์ Passcode" value="${r['ลิงก์ Passcode'] || ''}">
+    <label>Passcode เริ่ม</label><input id="pcs_${r.RequestID}" type="datetime-local">
+    <label>Passcode สิ้นสุด</label><input id="pce_${r.RequestID}" type="datetime-local">
+    <button class="btn green" onclick="updateStatus('${r.RequestID}')">บันทึกสถานะ</button>
   `;
 }
 
@@ -401,5 +723,6 @@ function link(url){
 
 init();
 </script>
+
 </body>
 </html>
